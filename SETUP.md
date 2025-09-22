@@ -1,4 +1,4 @@
-# Portfolio Projects Tracker - Setup Guide
+# Simple Inventory Management System - Setup Guide
 
 ## 1. Install Dependencies
 ```bash
@@ -25,7 +25,7 @@ npm install
    ```
 2. Edit `.env.local` and replace with your actual MongoDB connection string:
    ```
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio?retryWrites=true&w=majority
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/inventory?retryWrites=true&w=majority
    ```
 
 ## 4. Run the Application
@@ -35,70 +35,123 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 5. Test the Features
+## 5. Test the Complete CRUD Flow
 
-### Dashboard
-- View overview statistics of your portfolio items
-- Use quick action buttons to navigate to different sections
+### Step 1: Add Your First Supplier
+1. Navigate to the Suppliers page (`/suppliers`)
+2. Click "Add New Supplier"
+3. Fill in the form:
+   - **Contact Name**: "John Smith"
+   - **Company**: "Tech Supplies Inc."
+   - **Email**: "john@techsupplies.com"
+   - **Phone**: "+1-555-0123"
+   - **Address**: "123 Business St, Tech City, TC 12345"
+4. Click "Add Supplier"
+5. Verify the supplier appears in the list
 
-### Projects Management
-1. Navigate to the Projects page
-2. Click "Add New Project"
-3. Fill in project details:
-   - Title and description
-   - Technologies used (add multiple by typing and pressing Enter)
-   - GitHub and demo links (optional)
-   - Project status
-4. Save and view your project in the list
-5. Test editing and deleting projects
+### Step 2: Add Products to Your Inventory
+1. Navigate to the Products page (`/products`)
+2. Click "Add New Product"
+3. Fill in the form:
+   - **Product Name**: "Wireless Mouse"
+   - **Category**: "Electronics" (use autocomplete)
+   - **Description**: "Ergonomic wireless mouse with USB receiver"
+   - **Price**: "29.99"
+   - **Stock Quantity**: "50"
+   - **Supplier**: Select "John Smith - Tech Supplies Inc."
+4. Click "Add Product"
+5. Add a few more products with different stock levels:
+   - Low stock item (quantity < 10)
+   - Out of stock item (quantity = 0)
 
-### Skills Management
-1. Go to the Skills page
-2. Add skills with:
-   - Skill name (e.g., "React", "Python")
-   - Category (e.g., "Frontend Development")
-   - Proficiency level (Beginner to Expert)
-3. Skills are automatically grouped by category
-4. Test the category filter buttons
+### Step 3: Test Dashboard Features
+1. Go back to the Dashboard (`/`)
+2. Verify the statistics are updated:
+   - Total Products count
+   - Suppliers count
+   - Low Stock Items count
+   - Inventory Value calculation
+3. Click on the "Low Stock Items" card to filter products
 
-### Achievements Management
-1. Visit the Achievements page
-2. Add achievements with:
-   - Title and description
-   - Date of achievement
-   - Type (Award, Certification, etc.)
-3. View achievements in chronological order
-4. Test the type filter buttons
+### Step 4: Test Search and Filtering
+1. Go to Products page
+2. Use the search box to find products by name
+3. Test category filtering
+4. Test stock level filtering (All, In Stock, Low Stock, Out of Stock)
 
-## 6. Example Data
+### Step 5: Test Edit Functionality
+1. Click "Edit" on any product
+2. Update the stock quantity
+3. Change the price
+4. Save changes and verify updates
 
-Here are some example entries to get you started:
+### Step 6: Test Delete with Validation
+1. Try to delete a supplier that has products:
+   - Go to Suppliers page
+   - Click "Delete" on the supplier you created
+   - Should show error message about associated products
+2. Delete a product:
+   - Go to Products page
+   - Click "Delete" on any product
+   - Confirm deletion
+   - Verify product is removed
 
-### Sample Project
-- **Title**: "E-commerce Website"
-- **Description**: "Full-stack e-commerce platform with user authentication and payment processing"
-- **Technologies**: ["React", "Node.js", "MongoDB", "Stripe"]
-- **Status**: "Completed"
+### Step 7: Test Data Validation
+1. Try to add a product without selecting a supplier
+2. Try to add a supplier with an existing email
+3. Try to enter negative prices or quantities
+4. Verify validation messages appear
 
-### Sample Skill
-- **Name**: "React"
-- **Category**: "Frontend Development"
-- **Proficiency**: "Advanced"
+## 6. Sample Data for Testing
 
-### Sample Achievement
-- **Title**: "AWS Certified Developer"
-- **Description**: "Achieved AWS Certified Developer - Associate certification"
-- **Date**: "2024-01-15"
-- **Type**: "Certification"
+Here's some sample data you can use to populate your system:
+
+### Suppliers
+```
+1. Name: "Sarah Johnson", Company: "Office Depot Pro", Email: "sarah@officedepot.com"
+2. Name: "Mike Chen", Company: "Electronics Wholesale", Email: "mike@elecwholesale.com"
+3. Name: "Lisa Rodriguez", Company: "Home & Garden Supply", Email: "lisa@homegardens.com"
+```
+
+### Products
+```
+Electronics:
+- Wireless Keyboard - $45.99 - Stock: 25
+- USB Cable - $12.99 - Stock: 8 (Low Stock)
+- Monitor Stand - $89.99 - Stock: 0 (Out of Stock)
+
+Office Supplies:
+- Printer Paper - $24.99 - Stock: 100
+- Stapler - $15.99 - Stock: 5 (Low Stock)
+- Desk Organizer - $32.99 - Stock: 15
+
+Home & Garden:
+- Plant Pot - $18.99 - Stock: 30
+- Garden Hose - $45.99 - Stock: 3 (Low Stock)
+- Fertilizer - $22.99 - Stock: 20
+```
 
 ## 7. Database Collections
 
-The application will automatically create three collections in your MongoDB database:
-- `projects` - Stores project information
-- `skills` - Stores skill information
-- `achievements` - Stores achievement information
+The application will automatically create two collections in your MongoDB database:
+- `products` - Stores product information with supplier references
+- `suppliers` - Stores supplier contact and company information
 
-## 8. Troubleshooting
+## 8. Understanding the System
+
+### Key Relationships
+- Each product MUST have a supplier
+- Suppliers cannot be deleted if they have associated products
+- Stock levels are automatically categorized (In Stock, Low Stock, Out of Stock)
+
+### Business Rules
+- Low stock threshold is set to 10 items
+- Supplier emails must be unique
+- All monetary values are stored as numbers with 2 decimal precision
+- Products are sorted by creation date (newest first)
+- Suppliers are sorted alphabetically by company name
+
+## 9. Troubleshooting
 
 ### Common Issues:
 
@@ -107,11 +160,19 @@ The application will automatically create three collections in your MongoDB data
    - Ensure your IP address is whitelisted in MongoDB Atlas
    - Check that your database user has proper permissions
 
-2. **API Errors**
-   - Check the browser console for detailed error messages
-   - Verify all required fields are filled in forms
+2. **"No suppliers available" Error**
+   - You must add at least one supplier before adding products
+   - Navigate to `/suppliers` and add a supplier first
 
-3. **Styling Issues**
+3. **Cannot Delete Supplier**
+   - This is expected behavior if the supplier has associated products
+   - Delete all products for that supplier first, then delete the supplier
+
+4. **Search Not Working**
+   - Search is case-insensitive and searches both name and description
+   - Try partial matches or check spelling
+
+5. **Styling Issues**
    - Ensure Tailwind CSS is properly configured
    - Check that all component imports are correct
 
@@ -119,5 +180,16 @@ The application will automatically create three collections in your MongoDB data
 - Check the browser console for error messages
 - Verify your MongoDB Atlas setup
 - Ensure all environment variables are set correctly
+- Make sure you're following the correct order: Suppliers → Products
 
-That's it! Your Portfolio Projects Tracker is ready to use. Start building your portfolio by adding your projects, skills, and achievements!
+## 10. Next Steps
+
+Once you have the basic system running:
+
+1. **Customize Categories**: Add your own product categories in `ProductForm.js`
+2. **Adjust Stock Thresholds**: Modify the low stock threshold in the dashboard logic
+3. **Add More Suppliers**: Build a comprehensive supplier database
+4. **Import Data**: Use the MongoDB Atlas interface to import bulk data if needed
+5. **Deploy**: Follow the deployment instructions in README.md
+
+That's it! Your Simple Inventory Management System is ready to use. Start by adding suppliers, then products, and explore all the features!

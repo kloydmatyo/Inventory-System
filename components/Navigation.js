@@ -7,9 +7,8 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/', label: 'Dashboard', icon: '📊' },
-    { href: '/projects', label: 'Projects', icon: '🚀' },
-    { href: '/skills', label: 'Skills', icon: '💡' },
-    { href: '/achievements', label: 'Achievements', icon: '🏆' },
+    { href: '/products', label: 'Products', icon: '📦' },
+    { href: '/suppliers', label: 'Suppliers', icon: '🏢' },
   ]
 
   return (
@@ -17,7 +16,7 @@ export default function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="text-xl font-bold">
-            Portfolio Tracker
+            Inventory Manager
           </Link>
           
           <div className="flex space-x-1">

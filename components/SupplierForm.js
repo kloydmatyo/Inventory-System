@@ -1,11 +1,13 @@
 'use client'
 import { useState } from 'react'
 
-export default function SkillForm({ skill, onSubmit, onCancel }) {
+export default function SupplierForm({ supplier, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
-    name: skill?.name || '',
-    category: skill?.category || '',
-    proficiencyLevel: skill?.proficiencyLevel || 'beginner'
+    name: supplier?.name || '',
+    company: supplier?.company || '',
+    email: supplier?.email || '',
+    phone: supplier?.phone || '',
+    address: supplier?.address || ''
   })
   const [loading, setLoading] = useState(false)
 
@@ -15,11 +17,13 @@ export default function SkillForm({ skill, onSubmit, onCancel }) {
     
     try {
       await onSubmit(formData)
-      if (!skill) {
+      if (!supplier) {
         setFormData({
           name: '',
-          category: '',
-          proficiencyLevel: 'beginner'
+          company: '',
+          email: '',
+          phone: '',
+          address: ''
         })
       }
     } catch (error) {
@@ -34,29 +38,16 @@ export default function SkillForm({ skill, onSubmit, onCancel }) {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const commonCategories = [
-    'Frontend Development',
-    'Backend Development',
-    'Database',
-    'DevOps',
-    'Mobile Development',
-    'Design',
-    'Testing',
-    'Programming Languages',
-    'Frameworks',
-    'Tools'
-  ]
-
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4">
-        {skill ? 'Edit Skill' : 'Add New Skill'}
+        {supplier ? 'Edit Supplier' : 'Add New Supplier'}
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-            Skill Name *
+            Contact Name *
           </label>
           <input
             type="text"
@@ -65,50 +56,66 @@ export default function SkillForm({ skill, onSubmit, onCancel }) {
             value={formData.name}
             onChange={handleChange}
             required
-            placeholder="e.g., React, Python, Figma"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-            Category *
+          <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+            Company Name *
           </label>
           <input
             type="text"
-            id="category"
-            name="category"
-            value={formData.category}
+            id="company"
+            name="company"
+            value={formData.company}
             onChange={handleChange}
             required
-            list="categories"
-            placeholder="e.g., Frontend Development"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
-          <datalist id="categories">
-            {commonCategories.map(category => (
-              <option key={category} value={category} />
-            ))}
-          </datalist>
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            Email *
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+            Phone
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
         </div>
 
         <div className="md:col-span-2">
-          <label htmlFor="proficiencyLevel" className="block text-sm font-medium text-gray-700 mb-2">
-            Proficiency Level *
+          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+            Address
           </label>
-          <select
-            id="proficiencyLevel"
-            name="proficiencyLevel"
-            value={formData.proficiencyLevel}
+          <textarea
+            id="address"
+            name="address"
+            value={formData.address}
             onChange={handleChange}
-            required
+            rows="3"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
-            <option value="expert">Expert</option>
-          </select>
+          />
         </div>
       </div>
 
@@ -118,7 +125,7 @@ export default function SkillForm({ skill, onSubmit, onCancel }) {
           disabled={loading}
           className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 disabled:opacity-50"
         >
-          {loading ? 'Saving...' : (skill ? 'Update Skill' : 'Add Skill')}
+          {loading ? 'Saving...' : (supplier ? 'Update Supplier' : 'Add Supplier')}
         </button>
         
         <button

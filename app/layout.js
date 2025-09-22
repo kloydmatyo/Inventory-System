@@ -2,8 +2,8 @@ import './globals.css'
 import Navigation from '../components/Navigation'
 
 export const metadata = {
-  title: 'Portfolio Projects Tracker',
-  description: 'Manage your portfolio projects, skills, and achievements',
+  title: 'Simple Inventory Management',
+  description: 'Manage your products, suppliers, and stock levels',
 }
 
 export default function RootLayout({ children }) {

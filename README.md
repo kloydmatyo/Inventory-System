@@ -1,32 +1,29 @@
-# Portfolio Projects Tracker
+# Simple Inventory Management System
 
-A comprehensive portfolio management system built with Next.js and MongoDB to track your projects, skills, and achievements.
+A comprehensive inventory management system built with Next.js and MongoDB to track products, suppliers, and stock levels.
 
 ## Features
 
-### Projects Management
-- ✅ Add, edit, and delete projects
-- ✅ Track project status (Planning, In Progress, Completed, On Hold)
-- ✅ Store GitHub and demo links
-- ✅ Manage technologies used
-- ✅ Search and filter by status/technology
+### Products Management
+- ✅ Add, edit, and delete products
+- ✅ Track stock quantities and pricing
+- ✅ Categorize products for better organization
+- ✅ Link products to suppliers
+- ✅ Search and filter by category, stock level
+- ✅ Low stock alerts and inventory value tracking
 
-### Skills Management
-- ✅ Organize skills by categories
-- ✅ Track proficiency levels (Beginner, Intermediate, Advanced, Expert)
-- ✅ Visual proficiency indicators
-- ✅ Filter by skill categories
+### Suppliers Management
+- ✅ Manage supplier contact information
+- ✅ Company details and addresses
+- ✅ Email and phone contact management
+- ✅ Prevent deletion of suppliers with active products
+- ✅ Search functionality
 
-### Achievements Management
-- ✅ Record awards, certifications, competitions, and more
-- ✅ Categorize by achievement type
-- ✅ Date tracking with chronological display
-- ✅ Rich descriptions and context
-
-### Dashboard
-- ✅ Overview of all portfolio items
-- ✅ Quick statistics and progress tracking
-- ✅ Quick action buttons for adding new items
+### Dashboard & Analytics
+- ✅ Overview of total products and suppliers
+- ✅ Low stock item alerts
+- ✅ Total inventory value calculation
+- ✅ Quick action buttons for common tasks
 - ✅ Responsive design for all devices
 
 ## Tech Stack
@@ -61,7 +58,7 @@ cp .env.local.example .env.local
 
 2. Update `.env.local` with your MongoDB connection string:
 ```
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/portfolio?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/inventory?retryWrites=true&w=majority
 ```
 
 ### 4. Run the Development Server
@@ -77,113 +74,129 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ```
 ├── app/
 │   ├── api/
-│   │   ├── projects/       # Projects CRUD API
-│   │   ├── skills/         # Skills CRUD API
-│   │   └── achievements/   # Achievements CRUD API
-│   ├── projects/           # Projects page
-│   ├── skills/             # Skills page
-│   ├── achievements/       # Achievements page
-│   ├── globals.css         # Global styles
-│   ├── layout.js          # Root layout with navigation
-│   └── page.js            # Dashboard page
+│   │   ├── products/        # Products CRUD API
+│   │   └── suppliers/       # Suppliers CRUD API
+│   ├── products/            # Products management page
+│   ├── suppliers/           # Suppliers management page
+│   ├── globals.css          # Global styles
+│   ├── layout.js           # Root layout with navigation
+│   └── page.js             # Dashboard page
 ├── components/
-│   ├── Navigation.js       # Main navigation component
-│   ├── ProjectForm.js      # Project form component
-│   ├── ProjectList.js      # Projects display component
-│   ├── SkillForm.js        # Skill form component
-│   ├── SkillList.js        # Skills display component
-│   ├── AchievementForm.js  # Achievement form component
-│   └── AchievementList.js  # Achievements display component
+│   ├── Navigation.js        # Main navigation component
+│   ├── ProductForm.js       # Product form component
+│   ├── ProductList.js       # Products display component
+│   ├── SupplierForm.js      # Supplier form component
+│   └── SupplierList.js      # Suppliers display component
 ├── lib/
-│   └── mongodb.js         # MongoDB connection
-└── public/                # Static assets
+│   └── mongodb.js          # MongoDB connection
+└── public/                 # Static assets
 ```
 
 ## API Endpoints
 
-### Projects
-- `GET /api/projects` - Fetch all projects
-- `POST /api/projects` - Create new project
-- `GET /api/projects/[id]` - Fetch single project
-- `PUT /api/projects/[id]` - Update project
-- `DELETE /api/projects/[id]` - Delete project
+### Products
+- `GET /api/products` - Fetch all products
+- `POST /api/products` - Create new product
+- `GET /api/products/[id]` - Fetch single product
+- `PUT /api/products/[id]` - Update product
+- `DELETE /api/products/[id]` - Delete product
 
-### Skills
-- `GET /api/skills` - Fetch all skills
-- `POST /api/skills` - Create new skill
-- `GET /api/skills/[id]` - Fetch single skill
-- `PUT /api/skills/[id]` - Update skill
-- `DELETE /api/skills/[id]` - Delete skill
-
-### Achievements
-- `GET /api/achievements` - Fetch all achievements
-- `POST /api/achievements` - Create new achievement
-- `GET /api/achievements/[id]` - Fetch single achievement
-- `PUT /api/achievements/[id]` - Update achievement
-- `DELETE /api/achievements/[id]` - Delete achievement
+### Suppliers
+- `GET /api/suppliers` - Fetch all suppliers
+- `POST /api/suppliers` - Create new supplier
+- `GET /api/suppliers/[id]` - Fetch single supplier
+- `PUT /api/suppliers/[id]` - Update supplier
+- `DELETE /api/suppliers/[id]` - Delete supplier
 
 ## Database Schemas
 
-### Projects
+### Products
 ```javascript
 {
   _id: ObjectId,
-  title: String,              // Required - Project title
-  description: String,        // Required - Project description
-  technologies: [String],     // Array of technologies used
-  githubLink: String,         // Optional - GitHub repository URL
-  demoLink: String,          // Optional - Live demo URL
-  status: String,            // Required - planning|in-progress|completed|on-hold
+  name: String,              // Required - Product name
+  description: String,       // Optional - Product description
+  category: String,          // Required - Product category
+  price: Number,            // Required - Product price
+  stockQuantity: Number,    // Required - Current stock quantity
+  supplierId: String,       // Required - Reference to supplier
   createdAt: Date,
   updatedAt: Date
 }
 ```
 
-### Skills
+### Suppliers
 ```javascript
 {
   _id: ObjectId,
-  name: String,              // Required - Skill name
-  category: String,          // Required - Skill category
-  proficiencyLevel: String,  // Required - beginner|intermediate|advanced|expert
+  name: String,             // Required - Contact person name
+  company: String,          // Required - Company name
+  email: String,            // Required - Email address (unique)
+  phone: String,            // Optional - Phone number
+  address: String,          // Optional - Company address
   createdAt: Date,
   updatedAt: Date
 }
 ```
 
-### Achievements
-```javascript
-{
-  _id: ObjectId,
-  title: String,             // Required - Achievement title
-  description: String,       // Required - Achievement description
-  date: Date,               // Required - Achievement date
-  type: String,             // Required - award|certification|competition|etc
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+## Sample CRUD Flow
 
-## Usage Examples
+### 1. Add a Supplier
+1. Navigate to `/suppliers`
+2. Click "Add New Supplier"
+3. Fill in supplier details (name, company, email, phone, address)
+4. Save the supplier
 
-### Adding a Project
-1. Navigate to the Projects page
-2. Click "Add New Project"
-3. Fill in project details including title, description, technologies, and links
-4. Set the project status
-5. Save the project
+### 2. Add a Product
+1. Navigate to `/products`
+2. Click "Add New Product"
+3. Fill in product details:
+   - Name and description
+   - Category (with autocomplete suggestions)
+   - Price and stock quantity
+   - Select the supplier from dropdown
+4. Save the product
 
-### Managing Skills
-1. Go to the Skills page
-2. Add skills with categories and proficiency levels
-3. Skills are automatically grouped by category
-4. Use visual proficiency bars to track your progress
+### 3. Update Stock
+1. Go to Products page
+2. Click "Edit" on any product
+3. Update the stock quantity
+4. Save changes
 
-### Recording Achievements
-1. Visit the Achievements page
-2. Add achievements with dates and types
-3. Achievements are displayed chronologically
-4. Filter by achievement type for easy browsing
+### 4. Delete Product
+1. Find the product in the list
+2. Click "Delete" button
+3. Confirm deletion
+4. Product is removed from inventory
+
+### 5. View Low Stock Items
+1. Use the dashboard "Low Stock Items" card
+2. Or filter products by "Low Stock" in the products page
+3. Items with quantity < 10 are flagged as low stock
+
+## Key Features Explained
+
+### Stock Level Management
+- **In Stock**: Items with quantity > 0
+- **Low Stock**: Items with quantity < 10 (configurable)
+- **Out of Stock**: Items with quantity = 0
+- Visual indicators and filtering options
+
+### Supplier Integration
+- Products must be linked to a supplier
+- Suppliers cannot be deleted if they have associated products
+- Supplier information is displayed with products
+
+### Search and Filtering
+- Search products by name or description
+- Filter by category and stock level
+- Real-time filtering with result counts
+
+### Data Validation
+- Required field validation
+- Email uniqueness for suppliers
+- Supplier existence validation for products
+- Numeric validation for prices and quantities
 
 ## Deployment
 
@@ -196,13 +209,14 @@ This app is ready to deploy on Vercel:
 
 ## Future Enhancements
 
-- User authentication with NextAuth
-- Project image uploads
-- Skill endorsements
-- Achievement certificates
-- Export portfolio as PDF
-- Public portfolio view
-- Analytics and insights
+- Stock movement tracking (in/out transactions)
+- Barcode scanning integration
+- CSV/Excel export functionality
+- User authentication and role-based access
+- Purchase order management
+- Automated reorder points
+- Supplier performance analytics
+- Multi-location inventory support
 
 ## Contributing
 
