@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb'
 export async function GET(request, { params }) {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     const product = await db.collection('products').findOne({ _id: new ObjectId(params.id) })
     
     if (!product) {
@@ -23,7 +23,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     const body = await request.json()
     
     const { name, description, category, price, stockQuantity, supplierId } = body
@@ -70,7 +70,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     
     const result = await db.collection('products').deleteOne({ _id: new ObjectId(params.id) })
     

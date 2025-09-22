@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb'
 export async function GET(request, { params }) {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     const supplier = await db.collection('suppliers').findOne({ _id: new ObjectId(params.id) })
     
     if (!supplier) {
@@ -23,7 +23,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     const body = await request.json()
     
     const { name, company, email, phone, address } = body
@@ -74,7 +74,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     
     // Check if supplier has associated products
     const productsCount = await db.collection('products').countDocuments({ 

@@ -16,10 +16,17 @@ export default function SuppliersPage() {
 
   const fetchSuppliers = async () => {
     try {
+      console.log('Fetching suppliers...')
       const response = await fetch('/api/suppliers')
+      console.log('Fetch response status:', response.status)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log('Suppliers fetched:', data)
         setSuppliers(data)
+      } else {
+        const errorData = await response.json()
+        console.error('Error fetching suppliers:', errorData)
       }
     } catch (error) {
       console.error('Error fetching suppliers:', error)
@@ -30,19 +37,30 @@ export default function SuppliersPage() {
 
   const handleAddSupplier = async (formData) => {
     try {
+      console.log('Submitting supplier data:', formData)
+      
       const response = await fetch('/api/suppliers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
 
+      console.log('Response status:', response.status)
+      
       if (response.ok) {
         const newSupplier = await response.json()
+        console.log('Supplier created successfully:', newSupplier)
         setSuppliers(prev => [...prev, newSupplier])
         setShowForm(false)
+        alert('Supplier added successfully!')
+      } else {
+        const errorData = await response.json()
+        console.error('Error response:', errorData)
+        alert(`Error: ${errorData.error}`)
       }
     } catch (error) {
       console.error('Error adding supplier:', error)
+      alert(`Network error: ${error.message}`)
     }
   }
 

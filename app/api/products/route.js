@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb'
 export async function GET() {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     const products = await db.collection('products').find({}).sort({ createdAt: -1 }).toArray()
     
     return NextResponse.json(products)
@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const client = await clientPromise
-    const db = client.db('inventory')
+    const db = client.db('Inventory_System')
     const body = await request.json()
     
     const { name, description, category, price, stockQuantity, supplierId } = body

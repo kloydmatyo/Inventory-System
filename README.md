@@ -5,6 +5,7 @@ A comprehensive inventory management system built with Next.js and MongoDB to tr
 ## Features
 
 ### Products Management
+
 - ✅ Add, edit, and delete products
 - ✅ Track stock quantities and pricing
 - ✅ Categorize products for better organization
@@ -13,6 +14,7 @@ A comprehensive inventory management system built with Next.js and MongoDB to tr
 - ✅ Low stock alerts and inventory value tracking
 
 ### Suppliers Management
+
 - ✅ Manage supplier contact information
 - ✅ Company details and addresses
 - ✅ Email and phone contact management
@@ -20,6 +22,7 @@ A comprehensive inventory management system built with Next.js and MongoDB to tr
 - ✅ Search functionality
 
 ### Dashboard & Analytics
+
 - ✅ Overview of total products and suppliers
 - ✅ Low stock item alerts
 - ✅ Total inventory value calculation
@@ -52,11 +55,13 @@ npm install
 ### 3. Environment Variables
 
 1. Copy `.env.local.example` to `.env.local`:
+
 ```bash
 cp .env.local.example .env.local
 ```
 
 2. Update `.env.local` with your MongoDB connection string:
+
 ```
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/inventory?retryWrites=true&w=majority
 ```
@@ -95,6 +100,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## API Endpoints
 
 ### Products
+
 - `GET /api/products` - Fetch all products
 - `POST /api/products` - Create new product
 - `GET /api/products/[id]` - Fetch single product
@@ -102,6 +108,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 - `DELETE /api/products/[id]` - Delete product
 
 ### Suppliers
+
 - `GET /api/suppliers` - Fetch all suppliers
 - `POST /api/suppliers` - Create new supplier
 - `GET /api/suppliers/[id]` - Fetch single supplier
@@ -111,6 +118,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## Database Schemas
 
 ### Products
+
 ```javascript
 {
   _id: ObjectId,
@@ -126,6 +134,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ```
 
 ### Suppliers
+
 ```javascript
 {
   _id: ObjectId,
@@ -142,12 +151,14 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## Sample CRUD Flow
 
 ### 1. Add a Supplier
+
 1. Navigate to `/suppliers`
 2. Click "Add New Supplier"
 3. Fill in supplier details (name, company, email, phone, address)
 4. Save the supplier
 
 ### 2. Add a Product
+
 1. Navigate to `/products`
 2. Click "Add New Product"
 3. Fill in product details:
@@ -158,18 +169,21 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 4. Save the product
 
 ### 3. Update Stock
+
 1. Go to Products page
 2. Click "Edit" on any product
 3. Update the stock quantity
 4. Save changes
 
 ### 4. Delete Product
+
 1. Find the product in the list
 2. Click "Delete" button
 3. Confirm deletion
 4. Product is removed from inventory
 
 ### 5. View Low Stock Items
+
 1. Use the dashboard "Low Stock Items" card
 2. Or filter products by "Low Stock" in the products page
 3. Items with quantity < 10 are flagged as low stock
@@ -177,22 +191,26 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## Key Features Explained
 
 ### Stock Level Management
+
 - **In Stock**: Items with quantity > 0
 - **Low Stock**: Items with quantity < 10 (configurable)
 - **Out of Stock**: Items with quantity = 0
 - Visual indicators and filtering options
 
 ### Supplier Integration
+
 - Products must be linked to a supplier
 - Suppliers cannot be deleted if they have associated products
 - Supplier information is displayed with products
 
 ### Search and Filtering
+
 - Search products by name or description
 - Filter by category and stock level
 - Real-time filtering with result counts
 
 ### Data Validation
+
 - Required field validation
 - Email uniqueness for suppliers
 - Supplier existence validation for products
