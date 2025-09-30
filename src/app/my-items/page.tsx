@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import ItemCard from '@/components/ItemCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -31,15 +32,8 @@ interface Item {
   contactInfo?: string;
 }
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
-
 export default function MyItemsPage() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -49,8 +43,14 @@ export default function MyItemsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchMyItems();
-  }, [filter]);
+    if (!authLoading) {
+      if (!user) {
+        router.push('/login');
+      } else {
+        fetchMyItems();
+      }
+    }
+  }, [user, authLoading, filter, router]);
 
   const fetchMyItems = async () => {
     setLoading(true);
@@ -120,6 +120,19 @@ export default function MyItemsPage() {
 
   const filteredItems = filter === 'all' ? items : items.filter(item => item.status === filter);
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar user={user} />
+        <LoadingSpinner text="Loading..." />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to login
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar user={user} />
@@ -183,7 +196,7 @@ export default function MyItemsPage() {
               <ItemCard
                 key={item._id}
                 item={item}
-                currentUserId={user?.id}
+                currentUserId={user.id}
                 onEdit={handleEdit}
                 onDelete={handleDeleteClick}
                 showActions={true}

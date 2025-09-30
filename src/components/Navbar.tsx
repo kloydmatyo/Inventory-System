@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   Search, 
   Plus, 
@@ -24,20 +25,17 @@ interface NavbarProps {
   } | null;
 }
 
-export default function Navbar({ user }: NavbarProps) {
+export default function Navbar({ user: propUser }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user: authUser, logout } = useAuth();
   const router = useRouter();
+
+  // Use user from AuthContext if available, otherwise use prop user
+  const user = authUser || propUser;
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        router.push('/login');
-        router.refresh();
-      }
+      await logout();
     } catch (error) {
       console.error('Logout error:', error);
     }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import ItemCard from '@/components/ItemCard';
 import SearchFilters from '@/components/SearchFilters';
@@ -33,6 +34,7 @@ interface Item {
 }
 
 export default function ItemsPage() {
+  const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -51,8 +53,14 @@ export default function ItemsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchItems();
-  }, [searchQuery, filters, pagination.page]);
+    if (!authLoading) {
+      if (!user) {
+        router.push('/login');
+      } else {
+        fetchItems();
+      }
+    }
+  }, [user, authLoading, searchQuery, filters, pagination.page, router]);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -105,9 +113,22 @@ export default function ItemsPage() {
     setPagination(prev => ({ ...prev, page: newPage }));
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar user={user} />
+        <LoadingSpinner text="Loading..." />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to login
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <Navbar user={user} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -147,6 +168,7 @@ export default function ItemsPage() {
                 <ItemCard
                   key={item._id}
                   item={item}
+                  currentUserId={user.id}
                   showActions={false}
                 />
               ))}

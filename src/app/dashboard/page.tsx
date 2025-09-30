@@ -2,18 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import ItemCard from '@/components/ItemCard';
 import SearchFilters from '@/components/SearchFilters';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Plus, Package, Search as SearchIcon, TrendingUp, Clock, Users } from 'lucide-react';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
 
 interface Item {
   _id: string;
@@ -40,7 +34,7 @@ interface Item {
 }
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState<Item[]>([]);
   const [recentItems, setRecentItems] = useState<Item[]>([]);
   const [stats, setStats] = useState({
@@ -54,19 +48,16 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchUserData();
-    fetchDashboardData();
-  }, []);
-
-  const fetchUserData = async () => {
-    try {
-      // Get user from token (we'll implement this)
-      // For now, we'll set a placeholder
-    } catch (error) {
-      console.error('Failed to fetch user data:', error);
-      router.push('/login');
+    if (!authLoading) {
+      if (!user) {
+        router.push('/login');
+      } else {
+        fetchDashboardData();
+      }
     }
-  };
+  }, [user, authLoading, router]);
+
+  // Remove the fetchUserData function since we're using AuthContext
 
   const fetchDashboardData = async () => {
     try {
@@ -102,13 +93,17 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar user={user} />
         <LoadingSpinner text="Loading dashboard..." />
       </div>
     );
+  }
+
+  if (!user) {
+    return null; // Will redirect to login
   }
 
   if (error) {

@@ -1,16 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import ItemForm from '@/components/ItemForm';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { CheckCircle } from 'lucide-react';
 
 export default function ReportPage() {
+  const { user, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
 
   const handleSubmit = async (data: any) => {
     setIsLoading(true);
@@ -42,10 +51,23 @@ export default function ReportPage() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar user={user} />
+        <LoadingSpinner text="Loading..." />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to login
+  }
+
   if (success) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navbar />
+        <Navbar user={user} />
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
@@ -62,7 +84,7 @@ export default function ReportPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <Navbar user={user} />
       
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
